@@ -199,11 +199,11 @@ fi
 for((i=1;i<=$secondaryNodes;i++))
     do
         let a=3+$i
-        mongo -u "$mongoAdminUser" -p "$mongoAdminPasswd" "admin" --eval "printjson(rs.add('10.0.1.${a}:27017'))"
+        mongo -u "$mongoAdminUser" -p "$mongoAdminPasswd" "admin" --eval "printjson(rs.add('172.24.7.${a}:27017'))"
         if [[ $? -eq 0 ]];then
-            echo "adding server 10.0.1.${a} successfully"
+            echo "adding server 172.24.7.${a} successfully"
         else
-            echo "adding server 10.0.1.${a} failed!"
+            echo "adding server 172.24.7.${a} failed!"
         fi
     done
 	
