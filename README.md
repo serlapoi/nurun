@@ -1,0 +1,2 @@
+# nurun
+azure template
