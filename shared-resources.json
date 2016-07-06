@@ -50,9 +50,9 @@
         },
         "subnets": [
           {
-            "name": "[parameters('networkSettings').subnet.dse.name]",
+            "name": "[parameters('networkSettings').subnet.dmz2.name]",
             "properties": {
-              "addressPrefix": "[parameters('networkSettings').subnet.dse.prefix]"
+              "addressPrefix": "[parameters('networkSettings').subnet.dmz2.prefix]"
             }
           }
         ]
