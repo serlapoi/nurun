@@ -36,27 +36,6 @@
       "name": "[concat(parameters('namespace'), 'set')]",
       "location": "[resourceGroup().location]",
       "properties": {}
-    },
-    {
-      "apiVersion": "[variables('apiVersion')]",
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "[parameters('networkSettings').virtualNetworkName]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[parameters('networkSettings').addressPrefix]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[parameters('networkSettings').subnet.dmz2.name]",
-            "properties": {
-              "addressPrefix": "[parameters('networkSettings').subnet.dmz2.prefix]"
-            }
-          }
-        ]
-      }
     }
   ]
 }
