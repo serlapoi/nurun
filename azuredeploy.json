@@ -129,7 +129,7 @@
       "virtualNetworkName": "[variables('virtualNetworkName')]",
       "addressPrefix": "172.24.7.0/24",
       "subnet": {
-        "Subnet-dmz2": {
+        "Subnetdmz2": {
           "name": "Subnet-dmz2",
           "prefix": "172.24.7.0/25",
           "vnet": "[variables('virtualNetworkName')]"
@@ -218,7 +218,7 @@
             "value": "[concat('secondary', copyindex())]"
           },
           "subnet": {
-            "value": "[variables('networkSettings').subnet.Subnet-dmz2]"
+            "value": "[variables('networkSettings').subnet.Subnetdmz2]"
           },
           "sizeOfDataDiskInGB": {
             "value": "[parameters('sizeOfDataDiskInGB')]"
@@ -281,7 +281,7 @@
             "value": "primary"
           },
           "subnet": {
-            "value": "[variables('networkSettings').subnet.Subnet-dmz2]"
+            "value": "[variables('networkSettings').subnet.Subnetdmz2]"
           },
           "dnsname": {
             "value": "[parameters('dnsNamePrefix')]"
