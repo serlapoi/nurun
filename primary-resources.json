@@ -58,7 +58,7 @@
     "virtualNetworkName": "iaprodneweast",
     "NetworkRS": "iaprodnew",
     "vnetID": "[resourceId(variables('NetworkRS'), 'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "subnetRef": "[concat(variables('vnetID'), '/subnets/', parameters('subnet'))]",
+    "subnetRef": "[concat(variables('vnetID'), '/subnets/', parameters('subnet').name)]",
     "apiVersion": "2015-06-15",
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'standardsa')]",
     "securityGroupName": "[concat(parameters('namespace'), parameters('vmbasename'), 'nsg')]"
