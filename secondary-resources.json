@@ -43,7 +43,8 @@
     }
   },
   "variables": {
-    "vnetID": "[resourceId('iaprodnew', 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "virtualNetworkName": "iaprodneweast",
+    "vnetID": "[resourceId('iaprodnew', 'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
     "subnetRef": "[concat(variables('vnetID'), '/subnets/', parameters('subnet'))]",
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), parameters('vmbasename'))]",
     "apiVersion": "2015-06-15",
