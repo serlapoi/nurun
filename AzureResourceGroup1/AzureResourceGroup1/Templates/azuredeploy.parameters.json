@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "value": "azureuser"
+      "value": "nurun"
     },
     "adminPassword": {
         "reference": {
@@ -14,7 +14,7 @@
         }
     },
     "mongoAdminUsername": {
-      "value": "mongoadmin"
+      "value": "nurun"
     },
     "mongoAdminPassword": {
         "reference": {
@@ -24,9 +24,6 @@
             "secretName": "MontrealStreetAddress"
         }
     },
-    "environment": {
-      "value": "AzureCloud"
-    },
     "secondaryNodeCount": {
       "value": 2
     },
@@ -34,7 +31,7 @@
       "value": 20
     },
     "dnsNamePrefix": {
-      "value": "GEN-UNIQUE"
+      "value": "iars"
     },
     "centOsVersion": {
       "value": "7.0"
