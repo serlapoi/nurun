@@ -9,7 +9,7 @@ staticIp=$6
 
 install_mongo3() {
 
-#create repo
+#create mongo repo
 cat > /etc/yum.repos.d/mongodb-org-3.2.repo <<EOF
 [mongodb-org-3.2]
 name=MongoDB Repository
