@@ -6,13 +6,23 @@
       "value": "azureuser"
     },
     "adminPassword": {
-      "value": "GEN-PASSWORD"
+        "reference": {
+            "keyVault": {
+                "id": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/vaults/providers/Microsoft.KeyVault/vaults/ianurun"
+            },
+            "secretName": "MontrealStreetAddress"
+        }
     },
     "mongoAdminUsername": {
       "value": "mongoadmin"
     },
     "mongoAdminPassword": {
-      "value": "GEN-PASSWORD"
+        "reference": {
+            "keyVault": {
+                "id": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/vaults/providers/Microsoft.KeyVault/vaults/ianurun"
+            },
+            "secretName": "MontrealStreetAddress"
+        }
     },
     "environment": {
       "value": "AzureCloud"
