@@ -34,6 +34,7 @@
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\azuredeploy.json" />
     <Content Include="Templates\azuredeploy.parameters.json" />
+    <None Include="Scripts\Primary.sh" />
     <None Include="Scripts\Secondary.sh" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
