@@ -62,8 +62,11 @@ disk_format() {
 		
 }
 
+which mongo
+if [[ $? -ne 0 ]]; then
+	install_mongo3
+fi
 
-install_mongo3
 disk_format
 
 #start mongod

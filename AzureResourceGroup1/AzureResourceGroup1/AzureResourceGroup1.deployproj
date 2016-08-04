@@ -34,6 +34,7 @@
     <None Include="nested\secondary-resources.json" />
     <None Include="nested\shared-resources.json" />
     <None Include="Scripts\Deploy-AzureResourceGroup.ps1" />
+    <None Include="Scripts\installmongo.sh" />
     <None Include="Scripts\Primary.sh" />
     <None Include="Scripts\Secondary.sh" />
     <None Include="Templates\metadata.json" />
