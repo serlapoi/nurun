@@ -1,0 +1,127 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_IntDelivery_primary": {
+            "defaultValue": null,
+            "type": "Bool"
+        },
+        "virtualMachines_IntDelivery_name": {
+            "defaultValue": "IntDelivery",
+            "type": "String"
+        },
+        "networkInterfaces_IntDelivery_nic01_name": {
+            "defaultValue": "IntDelivery-nic01",
+            "type": "String"
+        },
+        "publicIPAddresses_intdeliverypubip_name": {
+            "defaultValue": "intdeliverypubip",
+            "type": "String"
+        },
+        "networkInterfaces_IntDelivery_nic01_id": {
+            "defaultValue": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/IntDelivery/providers/Microsoft.Compute/virtualMachines/IntDelivery'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_IntDelivery_name')]",
+            "apiVersion": "2015-06-15",
+          "location": "eastus",
+          "tags": {},
+          "properties": {
+            "hardwareProfile": {
+              "vmSize": "Standard_DS1_v2"
+            },
+            "availabilitySet": { "id": "[resourceid('Microsoft.Compute/availabilitySets', 'IntDeliveryCloneAvailabilitySet')]" },
+            "storageProfile": {
+              "osDisk": {
+                "name": "[concat(parameters('virtualMachines_IntDelivery_name'),'--', parameters('virtualMachines_IntDelivery_name'),'-os-1417454022260')]",
+                "osType": "Windows",
+                "createOption": "Attach",
+                "vhd": {
+                  "uri": "[concat('https://iaprodnew01.blob.core.windows.net/vhds/', parameters('virtualMachines_IntDelivery_name'),'-', parameters('virtualMachines_IntDelivery_name'),'-os-1417454022260.vhd')]"
+                },
+                "caching": "ReadWrite"
+              },
+              "dataDisks": [
+                {
+                  "lun": 0,
+                  "name": "[concat(parameters('virtualMachines_IntDelivery_name'),'-EXP-STORAGE')]",
+                  "createOption": "Attach",
+                  "vhd": {
+                    "uri": "[concat('https://iaprodnew01.blob.core.windows.net/vhds/', parameters('virtualMachines_IntDelivery_name'),'-EXP-STORAGE.vhd')]"
+                  },
+                  "caching": "ReadOnly"
+                }
+              ]
+            },
+            "networkProfile": {
+              "networkInterfaces": [
+                {
+                  "properties": {
+                    "primary": "[parameters('virtualMachines_IntDelivery_primary')]"
+                  },
+                  "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_IntDelivery_nic01_name'))]"
+                }
+              ]
+            }
+          },
+            "resources": [],
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_IntDelivery_nic01_name'))]"
+          ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/IntDelivery/providers/Microsoft.Network/networkInterfaces/IntDelivery-nic01'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_IntDelivery_nic01_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "eastus",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "172.24.7.15",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_intdeliverypubip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[parameters('networkInterfaces_IntDelivery_nic01_id')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableIPForwarding": false
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_intdeliverypubip_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/IntDelivery/providers/Microsoft.Network/publicIPAddresses/intdeliverypubip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_intdeliverypubip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "eastus",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('publicIPAddresses_intdeliverypubip_name')]"
+                }
+            },
+            "resources": [],
+            "dependsOn": []
+        }
+    ]
+}

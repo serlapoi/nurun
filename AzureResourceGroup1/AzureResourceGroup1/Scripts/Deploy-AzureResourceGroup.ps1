@@ -8,8 +8,8 @@ Param(
     [switch] $UploadArtifacts,
     [string] $StorageAccountName,
     [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',
-    [string] $TemplateFile = '..\Templates\azuredeploy.json',
-    [string] $TemplateParametersFile = '..\Templates\azuredeploy.parameters.json',
+    [string] $TemplateFile = '..\Templates\intDelivery.json',
+    [string] $TemplateParametersFile = '..\Templates\intDelivery.parameters.json',
     [string] $ArtifactStagingDirectory = '..\bin\Debug\staging',
     [string] $DSCSourceFolder = '..\DSC'
 )

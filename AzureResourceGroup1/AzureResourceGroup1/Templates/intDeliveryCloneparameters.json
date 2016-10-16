@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_IntDelivery_primary": {
+            "value": true
+        },
+      "virtualMachines_IntDelivery_name": {
+        "value": "IntDelivery"
+      },
+      "networkInterfaces_IntDelivery_nic01_name": {
+        "value": "IntDelivery-nic01"
+      },
+      "publicIPAddresses_intdeliverypubip_name": {
+        "value": "intdelivery1pubip"
+      },
+      "networkInterfaces_IntDelivery_nic01_id": {
+        "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2"
+      }
+    }
+}

@@ -1,0 +1,128 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachines_IntDeliveryClone_primary": {
+      "defaultValue": true,
+      "type": "bool"
+    },
+    "virtualMachines_IntDeliveryClone_name": {
+      "defaultValue": "IntDeliveryClone",
+      "type": "string"
+    },
+    "networkInterfaces_IntDeliveryClone_nic01_name": {
+      "defaultValue": "IntDeliveryClone-nic01",
+      "type": "string"
+    },
+    "publicIPAddresses_IntDeliveryClonepubip_name": {
+      "defaultValue": "IntDeliveryClonepubip",
+      "type": "string"
+    },
+    "networkInterfaces_IntDeliveryClone_nic01_id": {
+      "defaultValue": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2",
+      "type": "string"
+    },
+    "contentNodeCount": {
+      "type": "int",
+      "defaultValue": 2,
+      "metadata": {
+        "description": "The maximum number of content nodes."
+      }
+    }
+  },
+  "variables": {
+    "templateBaseUrl": "[uri(deployment().properties.templateLink.uri, '/nested/')",
+    "location": "East US",
+    "loadBalancers_intLoadBalancer_name": "intLoadBalancer",
+    "publicIPAddresses_intLoadBalancer_name": "intLoadBalancer"
+  },
+  "resources": [
+    {
+      "name": "shared",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateBaseUrl'), 'shared-Content.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "namespace": {
+            "value": "[variables('location')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat('Manager', copyindex())]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]",
+        "['vmLoop']"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateBaseUrl'), 'Content.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachines_IntDeliveryClone_primary": {
+            "value": true
+          },
+          "virtualMachines_IntDeliveryClone_name": {
+            "value": "IntDeliveryClone"
+          },
+          "networkInterfaces_IntDeliveryClone_nic01_name": {
+            "value": "IntDeliveryClone-nic01"
+          },
+          "publicIPAddresses_IntDeliveryClonepubip_name": {
+            "value": "IntDeliveryClonepubip"
+          },
+          "networkInterfaces_IntDeliveryClone_nic01_id": {
+            "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat('Delivery', copyindex())]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "copy": {
+        "name": "vmLoop",
+        "count": "[parameters('contentNodeCount')]"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateBaseUrl'), 'Content.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualMachines_IntDeliveryClone_primary": {
+            "value": true
+          },
+          "virtualMachines_IntDeliveryClone_name": {
+            "value": "IntDeliveryClone"
+          },
+          "networkInterfaces_IntDeliveryClone_nic01_name": {
+            "value": "IntDeliveryClone-nic01"
+          },
+          "publicIPAddresses_IntDeliveryClonepubip_name": {
+            "value": "IntDeliveryClonepubip"
+          },
+          "networkInterfaces_IntDeliveryClone_nic01_id": {
+            "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}

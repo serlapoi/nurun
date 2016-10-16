@@ -30,14 +30,26 @@
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
+    <None Include="nested\Content.json" />
     <None Include="nested\primary-resources.json" />
     <None Include="nested\secondary-resources.json" />
+    <None Include="nested\shared-Content.json" />
     <None Include="nested\shared-resources.json" />
     <None Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <None Include="Scripts\installmongo.sh" />
     <None Include="Scripts\Primary.sh" />
     <None Include="Scripts\Secondary.sh" />
+    <None Include="Templates\ContentDeploy.json" />
+    <None Include="Templates\Contentmetadata.json" />
+    <None Include="Templates\Content.parameters.json" />
     <None Include="Templates\metadata.json" />
+    <None Include="Templates\intDeliveryCloneparameters.json" />
+    <None Include="Templates\intDeliveryClonetemplate.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Templates_4azuredeploy_1parameters_1json__JSONSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
