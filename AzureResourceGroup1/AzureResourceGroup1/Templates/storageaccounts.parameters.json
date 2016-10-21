@@ -1,0 +1,20 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": {
+        "region": "qc",
+        "organisation": "ia",
+        "armEnv": "prod",
+        "armVersion": "v2"
+      }
+    },
+    "virtualMachines_name": {
+      "value": "cd"
+    },
+    "machineId": {
+      "value": "1"
+    }
+  }
+}

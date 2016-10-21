@@ -1,0 +1,21 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "loadBalancers_iaqcwaf_lb_name": {
+      "value": "iaqcwaf-lb"
+    },
+    "networkSecurityGroups_iacqcd_nsg_name": {
+      "value": "iaqccd-nsg"
+    },
+    "networkSecurityGroups_iaqcdm_nsg_name": {
+      "value": "iaqccm-nsg"
+    },
+    "publicIPAddresses_iaqcwaf_ip_name": {
+      "value": "iaqcwaf-ip"
+    },
+    "loadBalancers_iaqcwaf_lb_id": {
+      "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/v2rgqccd/providers/Microsoft.Network/loadBalancers/iaqcwaf-lb/frontendIPConfigurations/LoadBalancerFrontEnd"
+    }
+  }
+}

@@ -2,44 +2,74 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualMachines_IntDeliveryClone_primary": {
-      "defaultValue": true,
-      "type": "bool"
-    },
-    "virtualMachines_IntDeliveryClone_name": {
-      "defaultValue": "IntDeliveryClone",
-      "type": "string"
-    },
-    "networkInterfaces_IntDeliveryClone_nic01_name": {
-      "defaultValue": "IntDeliveryClone-nic01",
-      "type": "string"
-    },
-    "publicIPAddresses_IntDeliveryClonepubip_name": {
-      "defaultValue": "IntDeliveryClonepubip",
-      "type": "string"
-    },
-    "networkInterfaces_IntDeliveryClone_nic01_id": {
-      "defaultValue": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2",
-      "type": "string"
-    },
-    "contentNodeCount": {
-      "type": "int",
-      "defaultValue": 2,
-      "metadata": {
-        "description": "The maximum number of content nodes."
-      }
-    }
   },
   "variables": {
-    "templateBaseUrl": "[uri(deployment().properties.templateLink.uri, '/nested/')",
-    "location": "East US",
-    "loadBalancers_intLoadBalancer_name": "intLoadBalancer",
-    "publicIPAddresses_intLoadBalancer_name": "intLoadBalancer"
+    "templateBaseUrl": "[uri(deployment().properties.templateLink.uri, '/')]",
+    "environment": {
+      "region": "Qc",
+      "organisation": "Ia",
+      "armEnv": "Prod",
+      "armVersion": "V2"
+    },
+    "virtualMachines_primary": true,
+    "contentNodeCount": 2
   },
   "resources": [
     {
-      "name": "shared",
+      "name": "Virtual Network",
       "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[variables('templateBaseUrl')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "uri": "[concat(variables('templateBaseUrl'), 'VirtualNetwork.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environment": {
+            "type": "Object",
+            "value": "[variables('environment')]"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Build the networkSecurityGroups and availabilitySet pour sitecoreGrp: cm",
+      "name": "networkSecurityGroups-availabilitySet-cm",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [
+        "[variables('templateBaseUrl')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {"uri": }
+        "templateLink": {
+          "uri": "[concat(variables('templateBaseUrl'), 'shared-Content.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "environment": {
+            "type": "Object",
+            "value": "[variables('environment')]"
+          },
+          "sitecoreGrp": {
+            "type": "string",
+            "value": "cm"
+          }
+        }
+      }
+    },
+    {
+      "comments": "Build the networkSecurityGroups and availabilitySet pour sitecoreGrp: cd",
+      "name": "networkSecurityGroups-availabilitySet-cd",
+      "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "[variables('templateBaseUrl')]"
+      ],
       "apiVersion": "2016-09-01",
       "properties": {
         "mode": "Incremental",
@@ -48,8 +78,11 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "namespace": {
-            "value": "[variables('location')]"
+          "environment": {
+            "value": "[variables('environment')]"
+          },
+          "sitecoreGrp": {
+            "value": "cd"
           }
         }
       }
@@ -59,9 +92,12 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]",
-        "['vmLoop']"
+        "[variables('templateBaseUrl')]"
       ],
+      "copy": {
+        "name": "cmLoop",
+        "count": "[variables('contentNodeCount')]"
+      },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -69,20 +105,21 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "virtualMachines_IntDeliveryClone_primary": {
-            "value": true
+          "virtualMachines_primary": {
+            "type": "Bool",
+            "value": "[variables('virtualMachines_primary')]"
           },
-          "virtualMachines_IntDeliveryClone_name": {
-            "value": "IntDeliveryClone"
+          "machineId": {
+            "type": "String",
+            "value": "[copyIndex()]"
           },
-          "networkInterfaces_IntDeliveryClone_nic01_name": {
-            "value": "IntDeliveryClone-nic01"
+          "virtualMachines_name": {
+            "type": "Object",
+            "value": "cm"
           },
-          "publicIPAddresses_IntDeliveryClonepubip_name": {
-            "value": "IntDeliveryClonepubip"
-          },
-          "networkInterfaces_IntDeliveryClone_nic01_id": {
-            "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2"
+          "envirionment": {
+            "type": "Object",
+            "value": "[variables('environment')]"
           }
         }
       }
@@ -92,11 +129,11 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[variables('templateBaseUrl')]"
       ],
       "copy": {
-        "name": "vmLoop",
-        "count": "[parameters('contentNodeCount')]"
+        "name": "dmLoop",
+        "count": "[variables('contentNodeCount')]"
       },
       "properties": {
         "mode": "Incremental",
@@ -105,24 +142,30 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "virtualMachines_IntDeliveryClone_primary": {
-            "value": true
+          "virtualMachines_primary": {
+            "type": "Bool",
+            "value": "[variables('virtualMachines_primary')]"
           },
-          "virtualMachines_IntDeliveryClone_name": {
-            "value": "IntDeliveryClone"
+          "machineId": {
+            "type": "String",
+            "value": "[copyIndex()]"
           },
-          "networkInterfaces_IntDeliveryClone_nic01_name": {
-            "value": "IntDeliveryClone-nic01"
+          "virtualMachines_name": {
+            "type": "Object",
+            "value": "cd"
           },
-          "publicIPAddresses_IntDeliveryClonepubip_name": {
-            "value": "IntDeliveryClonepubip"
-          },
-          "networkInterfaces_IntDeliveryClone_nic01_id": {
-            "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2"
+          "envirionment": {
+            "type": "Object",
+            "value": "[variables('environment')]"
           }
         }
       }
     }
   ],
-  "outputs": {}
+  "outputs": {
+    "templateLink": {
+      "type": "string",
+      "value": "[uri(deployment().properties.templateLink.uri, '/nested/')]"
+    }
+  }
 }

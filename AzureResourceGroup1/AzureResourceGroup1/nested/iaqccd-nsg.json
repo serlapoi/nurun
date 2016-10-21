@@ -1,0 +1,103 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "loadBalancers_iaqcwaf_lb_name": {
+        "type": "string"
+      },
+        "networkSecurityGroups_iacqcd_nsg_name": {
+            "type": "string"
+        },
+        "networkSecurityGroups_iaqcdm_nsg_name": {
+            "type": "string"
+        },
+        "publicIPAddresses_iaqcwaf_ip_name": {
+            "type": "string"
+        },
+        "loadBalancers_iaqcwaf_lb_id": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/v2rgqccd/providers/Microsoft.Network/loadBalancers/iaqcwaf-lb'.",
+            "type": "Microsoft.Network/loadBalancers",
+            "name": "[parameters('loadBalancers_iaqcwaf_lb_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "canadaeast",
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_iaqcwaf_ip_name'))]"
+                            }
+                        }
+                    }
+                ],
+                "backendAddressPools": [],
+                "loadBalancingRules": [],
+                "probes": [],
+                "inboundNatRules": [
+                    {
+                        "name": "iaqcwaf01-admin",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[parameters('loadBalancers_iaqcwaf_lb_id')]"
+                            },
+                            "frontendPort": 8000,
+                            "backendPort": 8000,
+                            "protocol": "Tcp"
+                        }
+                    }
+                ],
+                "outboundNatRules": [],
+                "inboundNatPools": []
+            },
+            "resources": [],
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_iaqcwaf_ip_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/v2rgqccd/providers/Microsoft.Network/networkSecurityGroups/iacqcd-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_iacqcd_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "canadaeast",
+            "properties": {
+                "securityRules": []
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/v2rgqccd/providers/Microsoft.Network/networkSecurityGroups/iaqcdm-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_iaqcdm_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "canadaeast",
+            "properties": {
+                "securityRules": []
+            },
+            "resources": [],
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/v2rgqccd/providers/Microsoft.Network/publicIPAddresses/iaqcwaf-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_iaqcwaf_ip_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "canadaeast",
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4
+            },
+            "resources": [],
+            "dependsOn": []
+        }
+    ]
+}

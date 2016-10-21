@@ -1,0 +1,37 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachines_name": {
+      "type": "string"
+    },
+    "machineId": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": { "Description": "Numéro de la machine" }
+    },
+    "environment": {
+      "type": "object",
+      "metadata": { "Description": "Version de l'envirionnement" }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "comments": "[concat('Microsoft.Storage/storageAccounts: ', parameters('environment').armVersion, 'sto', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'))]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      },
+      "kind": "Storage",
+      "name": "[concat(parameters('environment').armVersion, 'sto', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'))]",
+      "apiVersion": "2016-01-01",
+      "location": "[resourceGroup().location]",
+      "tags": { "virtualMachines": "[concat(parameters('environment').armVersion, 'Vm', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'))]" },
+      "properties": {},
+      "resources": [],
+      "dependsOn": []
+    }
+  ]
+}

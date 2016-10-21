@@ -2,20 +2,5 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualMachines_IntDeliveryClone_primary": {
-      "value": true
-    },
-    "virtualMachines_IntDeliveryClone_name": {
-      "value": "IntDeliveryClone"
-    },
-    "networkInterfaces_IntDeliveryClone_nic01_name": {
-      "value": "IntDeliveryClone-nic01"
-    },
-    "publicIPAddresses_IntDeliveryClonepubip_name": {
-      "value": "IntDeliveryClonepubip"
-    },
-    "networkInterfaces_IntDeliveryClone_nic01_id": {
-      "value": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2"
-    }
   }
 }

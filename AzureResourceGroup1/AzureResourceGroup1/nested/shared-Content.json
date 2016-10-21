@@ -2,28 +2,40 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
+    "environment": {
+      "type": "object",
+      "metadata": { "Description": "Version de l'envirionnement" }
+    },
+    "sitecoreGrp": {
       "type": "string",
-      "metadata": {
-        "Description": "Azure Region"
-      }
+      "metadata": {"Description": "Sitecore Groupe CM = ContentManagement, CD = ContentDelivery" }
     }
   },
   "variables": {
-    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'standardsa')]",
-    "apiVersion": "2015-06-15"
-
   },
   "resources": [
     {
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "IntDeliveryCloneAvailabilitySet",
+      "apiVersion": "2016-03-30",
+      "comments": "[concat('Microsoft.Network/networkSecurityGroups: ', parameters('environment').armVersion, 'nsg', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('sitecoreGrp'))]",
+      "dependsOn": [],
+      "location": "[deployment().location]",
+      "name": "[concat(parameters('environment').armVersion, 'nsg', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('sitecoreGrp'))]",
+      "properties": {
+        "securityRules": []
+      },
+      "resources": [],
+      "type": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
       "apiVersion": "2015-06-15",
-      "location": "[parameters('location')]",
+      "comments": "[concat('Microsoft.Compute/availabilitySet: ', parameters('environment').armVersion, 'as', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('sitecoreGrp'))]",
+      "location": "[deployment().location]",
+      "name": "[concat(parameters('environment').armVersion, 'as', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('sitecoreGrp'))]",
       "properties": {
         "platformFaultDomainCount": 3,
         "platformUpdateDomainCount": 3
-      }
+      },
+      "type": "Microsoft.Compute/availabilitySets"
     }
   ]
-} 
+}

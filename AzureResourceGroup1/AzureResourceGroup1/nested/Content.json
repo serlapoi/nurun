@@ -2,61 +2,54 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "virtualMachines_IntDeliveryClone_primary": {
-      "defaultValue": true,
+    "virtualMachines_primary": {
       "type": "bool"
     },
-    "virtualMachines_IntDeliveryClone_name": {
-      "defaultValue": "IntDeliveryClone",
+    "virtualMachines_name": {
       "type": "string"
     },
-    "networkInterfaces_IntDeliveryClone_nic01_name": {
-      "defaultValue": "IntDeliveryClone-nic01",
-      "type": "string"
+    "environment": {
+      "type": "object",
+      "metadata": { "Description": "Version de l'envirionnement" }
     },
-    "publicIPAddresses_IntDeliveryClonepubip_name": {
-      "defaultValue": "IntDeliveryClonepubip",
-      "type": "string"
-    },
-    "networkInterfaces_IntDeliveryClone_nic01_id": {
-      "defaultValue": "/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/iaprodnew/providers/Microsoft.Network/virtualNetworks/iaprodneweast/subnets/Subnet-dmz2",
-      "type": "string"
+    "machineId": {
+      "type": "string",
+      "metadata": { "Description": "Numéro de machiane" }
     }
   },
   "variables": {
-    "loadBalancers_intLoadBalancer_name": "intLoadBalancer",
-    "publicIPAddresses_intLoadBalancer_name": "intLoadBalancer"
+    "machineName": "[concat(parameters('environment').armVersion, 'vm', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('virtualMachines_name'))]"
   },
   "resources": [
-  {
-      "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/IntDeliveryClone/providers/Microsoft.Compute/virtualMachines/IntDeliveryClone'.",
+    {
+      "comments": "[concat('Microsoft.Compute/virtualMachines: ', variables('machineName'))]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('virtualMachines_IntDeliveryClone_name')]",
+      "name": "[variables('machineName')]",
       "apiVersion": "2015-06-15",
-      "location": "eastus",
+      "location": "[resourceGroup().location]",
       "tags": {},
       "properties": {
         "hardwareProfile": {
           "vmSize": "Standard_DS1_v2"
         },
-        "availabilitySet": { "id": "[resourceId('Microsoft.Compute/availabilitySets', 'IntDeliveryCloneAvailabilitySet')]" },
+        "availabilitySet": { "id": "[resourceId('Microsoft.Compute/availabilitySets', concat(parameters('environment').armVersion, 'as', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('virtualMachines_name'))]" },
         "storageProfile": {
           "osDisk": {
-            "name": "[concat(parameters('virtualMachines_IntDeliveryClone_name'),'--', parameters('virtualMachines_IntDeliveryClone_name'),'-os-1417454022260')]",
+            "name": "[concat(variables('machineName'), '-os-Windows')]",
             "osType": "Windows",
             "createOption": "Attach",
             "vhd": {
-              "uri": "[concat('https://iaprodnew01.blob.core.windows.net/vhds/', parameters('virtualMachines_IntDeliveryClone_name'),'-', parameters('virtualMachines_IntDeliveryClone_name'),'-os-1417454022260.vhd')]"
+              "uri": "[concat('https://', parameters('environment').armVersion, 'sto', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'), '.blob.core.windows.net/vhds/', variables('machineName'),'-os-Windows', '.vhd')]"
             },
             "caching": "ReadWrite"
           },
           "dataDisks": [
             {
               "lun": 0,
-              "name": "[concat(parameters('virtualMachines_IntDeliveryClone_name'),'-EXP-STORAGE')]",
+              "name": "[concat(variables('machineName'), '-data-Windows')]",
               "createOption": "Attach",
               "vhd": {
-                "uri": "[concat('https://iaprodnew01.blob.core.windows.net/vhds/', parameters('virtualMachines_IntDeliveryClone_name'),'-EXP-STORAGE.vhd')]"
+                "uri": "[concat('https://', parameters('environment').armVersion, 'sto', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'), '.blob.core.windows.net/vhds/', variables('machineName'),'-data-Windows-0', '.vhd')]"
               },
               "caching": "ReadOnly"
             }
@@ -66,26 +59,27 @@
           "networkInterfaces": [
             {
               "properties": {
-                "primary": "[parameters('virtualMachines_IntDeliveryClone_primary')]"
+                "primary": "[parameters('virtualMachines_primary')]"
               },
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_IntDeliveryClone_nic01_name'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('machineName'), '-nic', parameters('machineId'))]"
             }
           ]
         }
       },
       "resources": [],
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_IntDeliveryClone_nic01_name'))]",
-        "[resourceId('Microsoft.Compute/availabilitySets', 'IntDeliveryCloneAvailabilitySet')]",
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_IntDeliveryClonepubip_name'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('machineName'), '-nic', parameters('machineId'))]",
+        "[resourceId('Microsoft.Compute/availabilitySets', concat(parameters('environment').armVersion, 'as', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, parameters('virtualMachines_name')))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', concat(parameters('environment').armVersion, 'sto', parameters('environment').organisation, parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId')))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('machineName'), '-pubIp'))]"
       ]
     },
     {
-      "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/IntDeliveryClone/providers/Microsoft.Network/networkInterfaces/IntDeliveryClone-nic01'.",
+      "comments": "[concat('Microsoft.Network/networkInterfaces: ', variables('machineName'), '-nic', parameters('machineId'))]",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[parameters('networkInterfaces_IntDeliveryClone_nic01_name')]",
+      "name": "[concat(variables('machineName'), '-nic', parameters('machineId'))]",
       "apiVersion": "2016-03-30",
-      "location": "eastus",
+      "location": "[deployment().location]",
       "properties": {
         "ipConfigurations": [
           {
@@ -94,10 +88,10 @@
               "privateIPAddress": "172.24.7.16",
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_IntDeliveryClonepubip_name'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('machineName'), '-pubIp'))]"
               },
               "subnet": {
-                "id": "[parameters('networkInterfaces_IntDeliveryClone_nic01_id')]"
+                "id": "[reference(concat('Microsoft.Network/virtualNetworks', parameters('environment').armVersion, '-', parameters('environment').organisation, '-', parameters('environment').armEnv, '-', deployment().location).subnets[concat('subnet-', parameters('virtualMachines_name'))].name)]"
               }
             }
           }
@@ -109,22 +103,39 @@
       },
       "resources": [],
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_IntDeliveryClonepubip_name'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', concat(variables('machineName'), '-pubIp'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('environment').armVersion, '-', parameters('environment').organisation, '-', parameters('environment').armEnv, '-', deployment().location).subnets[concat('subnet-', parameters('virtualMachines_name'))].name)]"
       ]
     },
     {
-      "comments": "Generalized from resource: '/subscriptions/3015ad9e-c044-4425-aa6c-b96df8f8e474/resourceGroups/IntDeliveryClone/providers/Microsoft.Network/publicIPAddresses/IntDeliveryClonepubip'.",
+      "comments": "[concat('Microsoft.Network/publicIPAddresses: ', variables('machineName'), '-pubIp')]",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[parameters('publicIPAddresses_IntDeliveryClonepubip_name')]",
+      "name": "[concat(variables('machineName'), '-pubIp')]",
       "apiVersion": "2016-03-30",
-      "location": "eastus",
+      "location": "[deployment().location]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "idleTimeoutInMinutes": 4,
         "dnsSettings": {
-          "domainNameLabel": "[toLower(parameters('publicIPAddresses_IntDeliveryClonepubip_name'))]"
+          "domainNameLabel": "[toLower(variables('machineName'))]"
         }
       },
+      "resources": [],
+      "dependsOn": []
+    },
+    {
+      "comments": "[concat('Microsoft.Storage/storageAccounts: ', parameters('environment').armVersion, 'sto', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'))]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      },
+      "kind": "Storage",
+      "name": "[concat(parameters('environment').armVersion, 'sto', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'))]",
+      "apiVersion": "2016-01-01",
+      "location": "[resourceGroup().location]",
+      "tags": { "virtualMachines": "[concat(parameters('environment').armVersion, 'Vm', parameters('environment').region, parameters('virtualMachines_name'), parameters('machineId'))]" },
+      "properties": {},
       "resources": [],
       "dependsOn": []
     }

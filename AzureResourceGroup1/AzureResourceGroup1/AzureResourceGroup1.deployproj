@@ -31,25 +31,31 @@
       <Visible>False</Visible>
     </None>
     <None Include="nested\Content.json" />
+    <None Include="nested\iaqccd-nsg.json" />
     <None Include="nested\primary-resources.json" />
     <None Include="nested\secondary-resources.json" />
     <None Include="nested\shared-Content.json" />
     <None Include="nested\shared-resources.json" />
+    <None Include="nested\storageaccounts.json" />
+    <None Include="nested\VirtualNetwork.json" />
     <None Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <None Include="Scripts\installmongo.sh" />
     <None Include="Scripts\Primary.sh" />
     <None Include="Scripts\Secondary.sh" />
+    <None Include="Templates\azuredeploy1.json" />
     <None Include="Templates\ContentDeploy.json" />
     <None Include="Templates\Contentmetadata.json" />
     <None Include="Templates\Content.parameters.json" />
+    <None Include="Templates\iaqccd-nsd.parameters.json" />
     <None Include="Templates\metadata.json" />
     <None Include="Templates\intDeliveryCloneparameters.json" />
     <None Include="Templates\intDeliveryClonetemplate.json" />
+    <None Include="Templates\storageaccounts.parameters.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Templates_4azuredeploy_1parameters_1json__JSONSchema="" />
+      <UserProperties nested_4VirtualNetwork_1json__JSONSchema="https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json" Templates_4azuredeploy_1parameters_1json__JSONSchema="" nested_4storageaccounts_1json__JSONSchema="https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

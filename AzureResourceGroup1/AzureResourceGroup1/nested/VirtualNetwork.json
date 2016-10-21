@@ -1,0 +1,54 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "object",
+      "metadata": { "Description": "Version de l'envirionnement" }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "comments": "[concat('Microsoft.Network/virtualNetworks: ', parameters('environment').armVersion, '-', parameters('environment').organisation, '-', parameters('environment').armEnv, '-', deployment().location)]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[concat(parameters('environment').armVersion, '-', parameters('environment').organisation, '-', parameters('environment').armEnv, '-', deployment().location)]",
+      "apiVersion": "2016-03-30",
+      "location": "[deployment().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "172.24.6.128/25",
+            "172.24.4.128/25"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "subnet-cm",
+            "properties": {
+              "addressPrefix": "172.24.6.192/26",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('environment').armVersion, 'nsg', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, 'cm'))]"
+              }
+            }
+          },
+          {
+            "name": "subnet-cd",
+            "properties": {
+              "addressPrefix": "172.24.4.192/26",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('environment').armVersion, 'nsg', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, 'cd'))]"
+              }
+            }
+          }
+        ]
+      },
+      "resources": [],
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('environment').armVersion, 'nsg', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, 'cm'))]",
+        "[resourceId('Microsoft.Network/virtualNetworks', concat(parameters('environment').armVersion, 'nsg', parameters('environment').organisation, parameters('environment').region, parameters('environment').armEnv, 'cd'))]"
+      ]
+    }
+  ]
+}
