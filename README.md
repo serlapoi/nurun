@@ -80,3 +80,4 @@ Each VM of the replica set uses raid0 to improve performance. We use 4 data disk
 - The replica set enables internal authentication. Check /etc/mongokeyfile for details.
 - More MongoDB usage details please visit MongoDB website https://www.mongodb.org/ .
 
+New Version (serge.lapointe@nurunc.com)
